@@ -1,0 +1,20 @@
+{
+  "name": "anonchat",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "CyberSepo",
+  "license": "ISC",
+  "description": "An anonymous chat app where anyone can write and see all messages in one place.",
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "mysql2": "^3.11.0",
+    "nodemon": "^3.1.4",
+    "prom-client": "^15.1.3"
+  }
+}
