@@ -36,7 +36,7 @@ const createTables = async () => {
         ip VARCHAR(255) NOT NULL
       )`
     );
-    console.log("Table created successfuly");
+    console.log("Tables created successfuly");
   } catch (error) {
     console.log("Table creation faild!");
     console.log("Table creation error : ", error);

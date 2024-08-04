@@ -36,6 +36,3 @@ database.connectToDatabase().then(() => {
   });
 });
 
-// app.listen(PORT, () => {
-//   console.log(`App started at ${PORT}`);
-// });

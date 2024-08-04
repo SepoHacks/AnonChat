@@ -3,38 +3,193 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test</title>
+    <title>Sepo Anonymous Chat</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>      
+      :root {
+        --background: hsl(240, 5%, 6%);
+        --foreground: hsl(60, 5%, 90%);
+        --primary: hsl(240, 0%, 90%);
+        --primary-foreground: hsl(60, 0%, 0%);
+        --secondary: hsl(240, 4%, 15%);
+        --secondary-foreground: hsl(60, 5%, 85%);
+        --accent: hsl(240, 0%, 13%);
+        --accent-foreground: hsl(60, 0%, 100%);
+        --destructive: hsl(0, 60%, 50%);
+        --destructive-foreground: hsl(0, 0%, 98%);
+        --muted: hsl(240, 5%, 25%);
+        --muted-foreground: hsl(60, 5%, 85%);
+        --card: hsl(240, 4%, 10%);
+        --card-foreground: hsl(60, 5%, 90%);
+        --popover: hsl(240, 5%, 15%);
+        --popover-foreground: hsl(60, 5%, 85%);
+        --border: hsl(240, 6%, 20%);
+        --input: hsl(240, 6%, 20%);
+        --ring: hsl(240, 5%, 90%);
+        --radius: 0.5rem;
+      }
+
+      *{
+        font-family: 'Roboto';
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 800px;
+        background-color: var(--card);
+        border-radius: var(--radius);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+        max-height: 600px;
+      }
+
+      .alert {
+        color: var(--destructive);
+        margin-bottom: 1rem;
+      }
+
+      .chat {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        flex: 1;
+        overflow-y: auto;
+        border-radius: var(--radius);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border);
+      }
+
+      .me {
+        display: flex;
+        align-items: center;
+      }
+
+      .msg {
+        flex: 1;
+        padding: 1rem;
+        border-radius: var(--radius) 0 0 var(--radius);
+        border: 1px solid var(--border);
+        background-color: var(--input);
+        color: var(--foreground);
+        font-size: 1rem;
+        margin-right: 0.5rem;
+      }
+
+      .msg:focus {
+        outline: none;
+        box-shadow: none;
+      }
+
+      .send {
+        padding: 0.75rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .send:hover {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+      }
+
+      p {
+        margin: 0.5rem 0;
+      }
+
+      strong {
+        color: var(--primary);
+      }
+    </style>
   </head>
   <body>
-    <div class="alert"></div>
-    <div class="msgs">sa</div>
-    <div class="me">
-      <input type="text" class="msg" />
-      <button class="send">Send</button>
+    <h1>Sepo Anonymous Chat</h1>
+    <div class="container">
+      <div class="alert"></div>
+      <div class="chat"></div>
+      <div class="me">
+        <input type="text" class="msg" />
+        <button class="send">Send</button>
+      </div>
     </div>
 
     <script>
       const alertA = document.querySelector(".alert");
+      const chatDiv = document.querySelector(".chat");
+      const msgInp = document.querySelector(".msg");
 
       document.querySelector(".send").addEventListener("click", () => {
-        const msg = document.querySelector(".msg").value;
+        const msg = msgInp.value;
+
+        const data = {
+          message: msg,
+        };
+
+        console.log(data);
 
         fetch("/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ msg }),
+          body: JSON.stringify(data),
         })
           .then((res) => {
             if (!res.ok) {
-              alertA.textContent = "Error";
+              alertA.textContent = "Rate Limited!";
             }
 
             return res.json();
           })
           .then((data) => {
             alertA.textContent = data.msg;
+            msgInp.value = "";
           });
       });
+
+      async function getMessagez() {
+        try {
+          const response = await fetch("/messages");
+          if (response.ok) {
+            const messages = await response.json();
+
+            chatDiv.innerHTML = "";
+
+            for (let i = 0; i < messages.length; i++) {
+              chatDiv.innerHTML += `
+                <p>
+                  <strong>${messages[i].username}:</strong>
+                  ${messages[i].message}
+                </p>
+              `;
+            }
+          } else {
+            console.log("rate limited");
+          }
+        } catch (error) {
+          console.log("Error when fetching messages");
+        }
+      }
+
+      setInterval(getMessagez, 1000);
     </script>
   </body>
 </html>
