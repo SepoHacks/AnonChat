@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test</title>
+  </head>
+  <body>
+    <div class="alert"></div>
+    <div class="msgs">sa</div>
+    <div class="me">
+      <input type="text" class="msg" />
+      <button class="send">Send</button>
+    </div>
+
+    <script>
+      const alertA = document.querySelector(".alert");
+
+      document.querySelector(".send").addEventListener("click", () => {
+        const msg = document.querySelector(".msg").value;
+
+        fetch("/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ msg }),
+        })
+          .then((res) => {
+            if (!res.ok) {
+              alertA.textContent = "Error";
+            }
+
+            return res.json();
+          })
+          .then((data) => {
+            alertA.textContent = data.msg;
+          });
+      });
+    </script>
+  </body>
+</html>
