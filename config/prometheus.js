@@ -8,7 +8,14 @@ const httpReqCounter = new prometheus.Counter({
   labelNames: ["method", "route"],
 });
 
+const messageCounter = new prometheus.Counter({
+  name: "sepochat_msg_counter",
+  help: "Total Messages",
+  labelNames: ["status"],
+});
+
 module.exports = {
   prometheus,
   httpReqCounter,
+  messageCounter,
 };
