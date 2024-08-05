@@ -33,9 +33,11 @@ const createTables = async () => {
       `CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
-        ip VARCHAR(255) NOT NULL
+        ip VARCHAR(255) NOT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`
     );
+        
     console.log("Tables created successfuly");
   } catch (error) {
     console.log("Table creation faild!");
