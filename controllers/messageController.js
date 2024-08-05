@@ -1,4 +1,4 @@
-const { prometheus } = require("../config/prometheus.js");
+const prometheus = require("../config/prometheus.js");
 const messageModel = require("../models/messageModel");
 
 const fetchMessages = async (req, res) => {
